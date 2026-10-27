@@ -1,0 +1,49 @@
+<!DOCTYPE html>
+<html lang="pt-BR">
+    <head>
+        <meta charset="UTF-8">
+        <meta name="viewport" content="width=device-width, initial-scale=1.0">
+        <title>Trilha Participações | Automações</title>
+        <link rel="icon" type="image/svg+xml" href="assets/images/favicon.svg">
+        <link rel="preconnect" href="https://cdn.jsdelivr.net" crossorigin>
+        <link rel="preconnect" href="https://fonts.googleapis.com">
+        <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+        <link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&display=swap">
+        <link rel="stylesheet" href="css/tokens.css">
+        <link rel="stylesheet" href="css/base.css">
+        <link rel="stylesheet" href="css/topbar.css">
+        <link rel="stylesheet" href="css/layout.css">
+        <link rel="stylesheet" href="css/components.css">
+        <link rel="stylesheet" href="css/automacoes.css">
+
+        <script defer src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
+        <script defer src="js/core/supabase.js"></script>
+        <script defer src="js/core/state.js"></script>
+        <script defer src="js/core/utils.js"></script>
+        <script defer src="js/core/dados.js"></script>
+        <script defer src="js/core/usuario.js"></script>
+        <script defer src="js/modules/automacoes.js"></script>
+        <script defer src="js/core/layout.js"></script>
+        <script defer src="js/core/busca.js"></script>
+        <script defer src="js/core/main.js"></script>
+    </head>
+
+    <body data-aba="automacoes">
+        <!-- A topbar é montada por js/core/layout.js -->
+        <header class="topbar" id="topbar"></header>
+
+        <main class="content-container">
+            <section id="view-automacoes" class="view-section active">
+                <div class="automacoes-container">
+                    <div class="automacoes-header">
+                        <h2>Robôs e Automações</h2>
+                        <p>Gerencie as automações criadas pela Controladoria.</p>
+                    </div>
+                    <div class="automacoes-grid" id="listaAutomacoes"></div>
+                </div>
+            </section>
+        </main>
+
+        <script>function iniciarPagina() { carregarAutomacoes(); }</script>
+    </body>
+</html>

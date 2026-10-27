@@ -1,0 +1,10 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 100 100" width="100%" height="100%">
+  <!-- Fundo transparente com padding interno para caber perfeitamente -->
+  <g transform="translate(4, 10) scale(0.92)">
+    <!-- Detalhe superior em azul claro -->
+    <path fill="#3b82f6" d="M 0 0 L 32 0 C 32 0, 24 16, 12 16 L 0 16 Z" />
+    
+    <!-- Símbolo principal da Trilha em azul escuro -->
+    <path fill="#0f2b48" d="M 36 0 L 96 0 C 96 0, 96 16, 80 16 L 40 16 C 30 16, 20 28, 12 40 L 0 56 Z" />
+  </g>
+</svg>

@@ -1,0 +1,145 @@
+/* Quadro Kanban */
+.kanban-board {
+  flex: 1;
+  display: flex;
+  gap: 0.30rem;
+  overflow-x: auto;
+  align-items: flex-start;
+}
+
+.kanban-column {
+  flex: 1;
+  min-width: 200px;
+  max-width: 300px;
+  background: rgba(255, 255, 255, 0.5); 
+  backdrop-filter: blur(8px);
+  border-radius: var(--radius-cards);
+  padding: 0.35rem;
+  display: flex;
+  flex-direction: column;
+  box-shadow: var(--shadow-sm);
+}
+
+.column-header {
+  min-width: 180px;
+  max-width: 300px;
+  font-weight: 600;
+  font-size: 0.8rem;
+  padding: 4px;
+  border-radius: 3px;
+  margin: 0 0 6px 0;
+  text-transform: uppercase;
+  letter-spacing: 0.04em;
+  display: inline-block;
+  text-align: center;
+}
+
+.status-todo { background: var(--tag-todo-bg); color: var(--tag-todo-txt); }
+.status-doing { background: var(--tag-doing-bg); color: var(--tag-doing-txt); }
+.status-review { background: var(--tag-review-bg); color: var(--tag-review-txt); }
+.status-done { background: var(--tag-done-bg); color: var(--tag-done-txt); }
+.status-semprazo { background: var(--tag-semprazo-bg); color: var(--tag-semprazo-txt); }
+
+.cards-container {
+  flex: 1;
+  display: flex;
+  flex-direction: column;
+  gap: 6px;
+  overflow-y: visible;
+}
+
+/* Card de Tarefa Neutro */
+.task-card {
+  min-height: 80px;
+  min-width: 180px;
+  background: var(--bg-surface);
+  padding: 6px;
+  border-radius: 3px;
+  border: 1px solid var(--border-light);
+  box-shadow: var(--shadow-sm);
+  cursor: grab;
+  transition: all 0.15s ease;
+}
+
+.task-card:hover {
+  transform: translateY(-2px);
+  box-shadow: var(--shadow-md);
+  border-color: var(--border-focus);
+  position: relative; 
+}
+
+.task-card h4 {
+  min-height: 30px;
+  font-size: 0.8rem;
+  color: var(--text-secondary);
+  margin-bottom: 6px;
+  font-weight: 500;
+  line-height: 1.4;
+  text-align: center;
+}
+
+.task-meta {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  font-size: 0.85rem;
+  color: var(--text-secondary);
+}
+
+.task-meta.task-date {
+  margin-bottom: auto;
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+}
+
+/* Badges de Prioridade */
+.priority-Alta { background: var(--prio-high-bg); color: var(--prio-high-txt); padding: 2px 8px; border-radius: 4px; font-weight: 600; font-size: 0.7rem; }
+.priority-Média { background: var(--prio-med-bg); color: var(--prio-med-txt); padding: 2px 8px; border-radius: 4px; font-weight: 600; font-size: 0.7rem; }
+.priority-Baixa { background: var(--prio-low-bg); color: var(--prio-low-txt); padding: 2px 8px; border-radius: 4px; font-weight: 600; font-size: 0.7rem; }
+
+.empty-column-msg {
+  align-content: center;
+  text-align: center;
+  min-height: 80px;
+  min-width: 180px;
+  color: var(--text-muted);
+  font-size: 0.8rem;
+  padding: 1.5rem 0.5rem;
+  border: 1px dashed var(--border-light);
+  border-radius: var(--radius-cards);
+  background-color: var(--bg-surface);
+  user-select: none;
+}
+
+/* Avatars dentro do Card Kanban */
+.task-avatars-flex {
+  display: flex;
+  align-items: center;
+  gap: -4px;
+}
+
+.task-avatar-sm {
+  width: 24px !important;
+  height: 24px !important;
+  font-size: 0.65rem !important;
+  border: 1.5px solid #ffffff;
+  margin-right: -6px;
+  cursor: pointer;
+  transition: transform 0.15s ease;
+}
+
+.task-avatar-sm:hover {
+  transform: scale(1.15);
+  z-index: 10;
+}
+
+/* Garante que os elementos internos do card não bloqueiem os eventos de Drag & Drop */
+.task-card * {
+  pointer-events: none;
+}
+
+/* Evita que elementos vazios ou textos da coluna interceptem o drop */
+.empty-column-msg {
+  pointer-events: none;
+}

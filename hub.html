@@ -1,0 +1,63 @@
+<!DOCTYPE html>
+<html lang="pt-BR">
+    <head>
+        <meta charset="UTF-8">
+        <meta name="viewport" content="width=device-width, initial-scale=1.0">
+        <title>Trilha Participações | Hub</title>
+        <link rel="icon" type="image/svg+xml" href="assets/images/favicon.svg">
+        <link rel="preconnect" href="https://fonts.googleapis.com">
+        <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+        <link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&display=swap">
+        <link rel="stylesheet" href="css/tokens.css">
+        <link rel="stylesheet" href="css/base.css">
+        <link rel="stylesheet" href="css/topbar.css">
+        <link rel="stylesheet" href="css/layout.css">
+
+        <!-- Biblioteca do Supabase -->
+        <link rel="preconnect" href="https://cdn.jsdelivr.net" crossorigin>
+        <script defer src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
+        <script defer src="js/core/supabase.js"></script>
+        <script defer src="js/core/state.js"></script>
+        <script defer src="js/core/utils.js"></script>
+        <script defer src="js/core/dados.js"></script>
+        <script defer src="js/core/usuario.js"></script>
+        <script defer src="js/core/main.js"></script>
+    </head>
+
+    <body>
+        <!-- Cabeçalho Principal -->
+        <header class="topbar">
+            <div class="brand-area">
+                <img src="assets/images/logo.png" alt="Trilha Participações" class="brand-logo" onclick="window.location.href='hub.html'" style="cursor: pointer;">
+            </div>
+
+            <div class="nav-group">
+                <!-- Menu de Navegação -->
+                <nav class="nav-buttons">
+                    <button class="btn-nav active" onclick="event.preventDefault();">Dashboards</button>
+                    <button class="btn-nav" onclick="window.location.href='tarefas.html'">Controladoria</button>
+                </nav>
+            </div>
+ 
+            <!-- Perfil do Usuário Logado com Menu Dropdown -->
+            <div class="user-profile-container" id="userProfileContainer">
+                <div class="user-profile-avatar" id="userProfileAvatar" onclick="alternarMenuUsuario(event)">
+                    <span id="userAvatarText">?</span>
+                </div>
+
+                <!-- Menu Suspenso de Opções -->
+                <div class="user-dropdown-menu" id="userDropdownMenu">
+                    <div class="dropdown-header">
+                        <strong id="dropdownUserName">Usuário</strong>
+                        <span id="dropdownUserEmail">email@triviatrens.com.br</span>
+                    </div>
+                    <div class="dropdown-divider"></div>
+                    <button class="dropdown-item btn-logout" onclick="fazerLogout()">
+                        Desconectar
+                    </button>
+                </div>
+            </div>
+        </header>
+
+    </body>
+</html>

@@ -1,0 +1,258 @@
+/* ==========================================
+   TOPBAR / CABEÇALHO
+   ========================================== */
+
+.topbar {
+  background-color: var(--brand-navy);
+  color: #ffffff;
+  padding: 0 2rem;
+  height: 48px;
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  box-shadow: var(--shadow-md);
+  position: sticky;
+  top: 0;
+  z-index: 1000;
+  gap: 1rem;
+}
+
+.brand-area {
+  display: flex;
+  align-items: center;
+  gap: 12px;
+}
+
+.brand-logo {
+  height: 48px;
+  width: auto;
+  padding: 4px 4px;
+  border-radius: 6px;
+  object-fit: contain;
+}
+
+/* Grupo central: navegação + busca */
+.nav-group {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  gap: 12px;
+  flex: 1;
+  padding: 0;
+}
+
+/* Grupo de Navegação */
+.nav-buttons {
+  display: flex;
+  gap: 6px;
+  padding: 6px;
+  border-radius: var(--radius-cards);
+}
+
+.btn-nav {
+  background: transparent;
+  color: #66778e;
+  border: none;
+  min-width: 80px;
+  min-height: 30px;
+  height: 1rem;
+  border-radius: 3px;
+  font-size: 0.75rem;
+  font-weight: 500;
+  cursor: pointer;
+  transition: all 0.15s ease-in-out;
+  white-space: nowrap;
+}
+
+.btn-nav:hover {
+  color: #66778e;
+  background-color: rgba(0, 0, 0, 0.1);
+}
+
+.btn-nav.active {
+  background-color: var(--col-todo-border) !important;
+  color: var(--text-secondary) !important;
+  font-weight: 600;
+  box-shadow: 0 2px 4px rgba(0,0,0,0.15);
+}
+
+/* Campo de busca no header (Tarefas / Equipe) */
+.header-search-area {
+  display: none;
+  align-items: center;
+}
+
+.search-input {
+  background: rgba(255, 255, 255, 0.08);
+  border: 1px solid rgba(0, 0, 0, 0.15);
+  color: var(--text-muted);
+  padding: 7px 12px;
+  border-radius: var(--radius-cards);
+  font-size: 0.8rem;
+  outline: none;
+  min-width: 200px;
+  transition: all 0.15s ease;
+}
+
+.search-input::placeholder {
+  color: #94a3b8;
+}
+
+.search-input:focus {
+  border-color: var(--brand-blue);
+  background: rgba(255, 255, 255, 0.12);
+  box-shadow: 0 0 0 3px rgba(59, 145, 216, 0.25);
+}
+
+.header-action-area {
+  display: flex;
+  align-items: center;
+}
+
+.btn-action-highlight {
+  min-width: 80px;
+  min-height: 30px;
+  background-color: var(--brand-blue);
+  color: #ffffff;
+  border: none;
+  border-radius: 3px;
+  font-size: 0.82rem;
+  font-weight: 600;
+  cursor: pointer;
+  transition: all 0.2s ease;
+  box-shadow: 0 2px 4px rgba(0, 0, 0, 0.15);
+  margin-right: auto;
+}
+
+.btn-action-highlight:hover {
+  background-color: var(--brand-blue-hover);
+  transform: translateY(-1px);
+}
+
+.btn-action-highlight.hidden {
+  display: none;
+}
+
+.header-action-area {
+  display: flex;
+  align-items: center;
+  gap: 12px;
+}
+
+/* Ícone de perfil redondo no topbar */
+.user-profile-avatar { 
+  width: 38px;
+  height: 38px;
+  border-radius: 50%;
+  background-color: var(--brand-blue);
+  color: #ffffff;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  font-weight: 600;
+  font-size: 0.9rem;
+  box-shadow: 0 2px 4px rgba(0, 0, 0, 0.2);
+  border: 2px solid rgba(255, 255, 255, 0.2);
+  overflow: hidden;
+  flex-shrink: 0;
+  cursor: pointer;
+  transition: transform 0.15s ease, border-color 0.15s ease;
+}
+
+.user-profile-avatar:hover {
+  transform: scale(1.05);
+  border-color: #ffffff;
+}
+
+.user-profile-avatar img {
+  width: 100%;
+  height: 100%;
+  object-fit: cover;
+}
+
+/* Container de perfil com posição relativa para o dropdown */
+.user-profile-container {
+  position: relative;
+  display: inline-block;
+}
+
+/* Menu Dropdown de Perfil */
+.user-dropdown-menu {
+  display: none;
+  position: absolute;
+  top: calc(100% + 10px);
+  right: 0;
+  min-width: 240px;
+  max-width: 300px;
+  background-color: var(--bg-surface);
+  border: 1px solid var(--border-light);
+  border-radius: var(--radius-cards);
+  box-shadow: var(--shadow-lg);
+  padding: 0.75rem 0;
+  animation: fadeIn 0.15s ease-in-out;
+}
+
+.user-dropdown-menu.active {
+  display: block;
+  z-index: 104;
+}
+
+/* Cabeçalho do Dropdown com dados da conta */
+.dropdown-header {
+  padding: 0.5rem 1rem;
+  display: flex;
+  flex-direction: column;
+  gap: 2px;
+}
+
+.dropdown-header strong {
+  font-size: 0.88rem;
+  color: var(--text-primary);
+  white-space: nowrap;
+  overflow: hidden;
+  text-overflow: ellipsis;
+}
+
+.dropdown-header span {
+  font-size: 0.75rem;
+  color: var(--text-muted);
+  white-space: nowrap;
+  overflow: hidden;
+  text-overflow: ellipsis;
+}
+
+.dropdown-divider {
+  height: 1px;
+  background-color: var(--border-light);
+  margin: 0.5rem 0;
+}
+
+/* Botão de Logout dentro do Dropdown */
+.dropdown-item {
+  width: 100%;
+  padding: 8px 16px;
+  background: transparent;
+  border: none;
+  text-align: left;
+  font-size: 0.85rem;
+  font-weight: 500;
+  color: var(--text-primary);
+  cursor: pointer;
+  display: flex;
+  align-items: center;
+  gap: 8px;
+  transition: background-color 0.15s ease;
+}
+
+.dropdown-item.btn-logout {
+  color: #dc2626; /* Vermelho destacado para encerramento de sessão */
+  font-size: 0.8rem;
+}
+
+.dropdown-item.btn-logout:hover {
+  background-color: #fef2f2;
+}
+
+/* Abas agora são links */
+a.btn-nav { display: inline-flex; align-items: center; justify-content: center; text-decoration: none; }
+.topbar { view-transition-name: topbar; }

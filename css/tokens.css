@@ -1,0 +1,60 @@
+:root {
+  /* Cores da Identidade Visual (Trilha Participações) */
+  --brand-navy: #ffffff;
+  --brand-blue: #3b91d8;
+  --brand-blue-hover: #2d7bbd;
+
+  /* Cores Neutras de Fundo e Superfície */
+  --bg-app: #e8e8e8;
+  --bg-surface: #ffffff;
+  --bg-subtle: #f1f5f9;
+  
+  /* Textos */
+  --text-primary: #0f172a;
+  --text-secondary: #475569;
+  --text-muted: #94a3b8;
+
+  /* Bordas e Divisores */
+  --border-light: #e2e8f0;
+  --border-focus: #3b91d8;
+
+  /* Status e Colunas (Pastéis Neutros) */
+  --col-todo-bg: #f8fafc;
+  --col-todo-border: #cbd5e1;
+  --tag-todo-bg: #f1f5f9;
+  --tag-todo-txt: #475569;
+
+  --col-doing-bg: #f0f9ff;
+  --col-doing-border: #bae6fd;
+  --tag-doing-bg: #e0f2fe;
+  --tag-doing-txt: #0369a1;
+
+  --col-review-bg: #fffbebf5;
+  --col-review-border: #fde68a;
+  --tag-review-bg: #fef3c7;
+  --tag-review-txt: #b45309;
+
+  --col-done-bg: #f0fdf4;
+  --col-done-border: #bbf7d0;
+  --tag-done-bg: #dcfce7;
+  --tag-done-txt: #15803d;
+
+  --col-semprazo-bg: #f1f5f9;
+  --col-semprazo-border: #cbd5e1;
+  --tag-semprazo-bg: #f1f5f9;
+  --tag-semprazo-txt: #475569;
+
+  /* Prioridades */
+  --prio-high-bg: #fee2e2;
+  --prio-high-txt: #991b1b;
+  --prio-med-bg: #ffedd5;
+  --prio-med-txt: #9a3412;
+  --prio-low-bg: #f1f5f9;
+  --prio-low-txt: #475569;
+
+  /* Elevação e Efeitos */
+  --shadow-sm: 0 1px 2px 0 rgb(0 0 0 / 0.05);
+  --shadow-md: 0 4px 6px -1px rgb(0 0 0 / 0.07), 0 2px 4px -2px rgb(0 0 0 / 0.05);
+  --shadow-lg: 0 10px 15px -3px rgb(0 0 0 / 0.1), 0 4px 6px -4px rgb(0 0 0 / 0.05);
+  --radius-cards: 6px;
+}

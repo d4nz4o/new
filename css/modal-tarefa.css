@@ -1,0 +1,324 @@
+/* ==========================================
+   ESTILOS DO MODAL DE DETALHES DA TAREFA
+   ========================================== */
+
+.modal-overlay {
+  display: none;
+  position: fixed;
+  top: 0;
+  left: 0;
+  width: 100vw;
+  height: 100vh;
+  background: rgba(15, 23, 42, 0.5);
+  backdrop-filter: blur(4px);
+  z-index: 2000;
+  align-items: center;
+  justify-content: center;
+  padding: 1rem;
+}
+
+.modal-overlay.active {
+  display: flex;
+}
+
+.modal-card-container {
+  background: var(--bg-surface);
+  border-radius: var(--radius-cards);
+  width: 100%;
+  max-width: 800px;
+  max-height: 88vh;
+  overflow-y: auto;
+  box-shadow: var(--shadow-lg);
+  padding: 2rem;
+  position: relative;
+  border: 1px solid var(--border-light);
+}
+
+.modal-close-btn {
+  position: absolute;
+  top: 1rem;
+  right: 1.2rem;
+  background: transparent;
+  border: none;
+  font-size: 1.6rem;
+  cursor: pointer;
+  color: var(--text-muted);
+  transition: color 0.15s ease;
+}
+
+.modal-close-btn:hover {
+  color: var(--text-primary);
+}
+
+.modal-coluna-badge {
+  display: inline-block;
+  color: #fff;
+  font-size: 0.72rem;
+  font-weight: 600;
+  padding: 2px 8px;
+  border-radius: 4px;
+  margin-bottom: 6px;
+  background-color: var(--brand-blue);
+  text-transform: uppercase;
+}
+
+.modal-header h2 {
+  font-size: 1.25rem;
+  color: var(--text-primary);
+  outline: none;
+  padding: 0 0 6px 0;
+  border-radius: 4px;
+  text-transform: uppercase;
+}
+
+.modal-header h2:focus {
+  background: var(--bg-subtle);
+  border: 1px solid var(--border-light);
+}
+
+.modal-body-grid {
+  display: grid;
+  grid-template-columns: 2fr 1fr;
+  gap: 1.5rem;
+}
+
+@media (max-width: 768px) {
+  .modal-body-grid {
+    grid-template-columns: 1fr;
+  }
+}
+
+.modal-section {
+  margin-bottom: 1.25rem;
+}
+
+.modal-section h3 {
+  font-size: 0.88rem;
+  color: var(--text-secondary);
+  margin-bottom: 0.5rem;
+  font-weight: 600;
+}
+
+.modal-section textarea {
+  width: 100%;
+  border: 1px solid var(--border-light);
+  border-radius: 6px;
+  padding: 8px 12px;
+  font-size: 0.85rem;
+  outline: none;
+  resize: vertical;
+  color: var(--text-primary);
+  background: var(--bg-app);
+}
+
+.modal-section textarea:focus {
+  border-color: var(--brand-blue);
+  background: #fff;
+}
+
+/* Checklist / Subtarefas */
+.section-header-flex {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+}
+
+.progress-text {
+  font-size: 0.75rem;
+  font-weight: 600;
+  color: var(--brand-blue);
+}
+
+.progress-bar-container {
+  height: 6px;
+  background: var(--border-light);
+  border-radius: 3px;
+  overflow: hidden;
+  margin-bottom: 0.75rem;
+}
+
+.progress-bar-fill {
+  height: 100%;
+  background: var(--brand-blue);
+  transition: width 0.2s ease;
+}
+
+.subtask-item {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+  padding: 6px 0;
+  font-size: 0.85rem;
+  border-bottom: 1px dashed var(--border-light);
+}
+
+.subtask-item.concluida span {
+  text-decoration: line-through;
+  color: var(--text-muted);
+}
+
+.btn-del-sub {
+  background: transparent;
+  border: none;
+  color: #dc2626;
+  font-size: 1.1rem;
+  cursor: pointer;
+  margin-left: auto;
+}
+
+.add-subtask-box {
+  display: flex;
+  gap: 8px;
+  margin-top: 10px;
+}
+
+.add-subtask-box input {
+  flex: 1;
+  padding: 6px 10px;
+  border: 1px solid var(--border-light);
+  border-radius: 6px;
+  font-size: 0.82rem;
+  outline: none;
+}
+
+.btn-sm {
+  padding: 6px 12px !important;
+  font-size: 0.78rem !important;
+}
+
+/* Sidebar do Modal */
+.meta-group {
+  margin-bottom: 1.1rem;
+}
+
+.meta-group label {
+  display: block;
+  font-size: 0.72rem;
+  font-weight: 700;
+  text-transform: uppercase;
+  color: var(--text-muted);
+  margin-bottom: 4px;
+}
+
+.meta-group select, .meta-group input {
+  width: 100%;
+  padding: 8px;
+  border: 1px solid var(--border-light);
+  border-radius: 6px;
+  font-size: 0.85rem;
+  color: var(--text-primary);
+  background: var(--bg-surface);
+}
+
+.responsaveis-avatares-flex {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 6px;
+  margin-top: 4px;
+}
+
+.btn-danger-outline {
+  width: 100%;
+  background: transparent;
+  border: 1px solid #fecaca;
+  color: #dc2626;
+  padding: 8px;
+  border-radius: 6px;
+  font-size: 0.8rem;
+  cursor: pointer;
+  font-weight: 600;
+  transition: background 0.15s ease;
+}
+
+.btn-danger-outline:hover {
+  background: #fef2f2;
+}
+
+/* Anexos e Comentários */
+.anexo-item, .comentario-item {
+  background: var(--bg-app);
+  padding: 8px 12px;
+  border-radius: 6px;
+  border: 1px solid var(--border-light);
+  margin-bottom: 6px;
+  font-size: 0.82rem;
+}
+
+.anexo-item a {
+  color: var(--brand-blue);
+  text-decoration: none;
+  font-weight: 500;
+}
+
+.anexo-item a:hover {
+  text-decoration: underline;
+}
+
+.comentario-item strong {
+  color: var(--text-primary);
+}
+
+.comentario-item small {
+  color: var(--text-muted);
+}
+
+.comentario-item p {
+  margin-top: 4px;
+  color: var(--text-secondary);
+}
+
+.novo-comentario-box {
+  display: flex;
+  flex-direction: column;
+  gap: 6px;
+  margin-top: 8px;
+}
+
+/* ==========================================
+   TAGS / ETIQUETAS DAS TAREFAS
+   ========================================== */
+
+.task-tags-flex {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 4px;
+  margin-top: 8px;
+}
+
+.task-tag-pill {
+  font-size: 0.68rem;
+  font-weight: 600;
+  padding: 2px 8px;
+  border-radius: 12px;
+  background: var(--bg-subtle, #f1f5f9);
+  color: var(--text-secondary, #475569);
+  border: 1px solid var(--border-light, #e2e8f0);
+  display: inline-flex;
+  align-items: center;
+  gap: 4px;
+}
+
+/* Modal: Seção de Tags */
+.modal-tags-container {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 6px;
+  align-items: center;
+}
+
+.btn-add-tag-modal {
+  background: transparent;
+  border: 1px dashed var(--border-light, #cbd5e1);
+  padding: 3px 8px;
+  border-radius: 12px;
+  font-size: 0.72rem;
+  cursor: pointer;
+  color: var(--text-muted, #64748b);
+  transition: all 0.15s ease;
+}
+
+.btn-add-tag-modal:hover {
+  border-color: var(--brand-blue, #2563eb);
+  color: var(--brand-blue, #2563eb);
+  background: #eff6ff;
+}

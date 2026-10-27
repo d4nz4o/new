@@ -1,0 +1,139 @@
+<!DOCTYPE html>
+<html lang="pt-BR">
+    <head>
+        <meta charset="UTF-8">
+        <meta name="viewport" content="width=device-width, initial-scale=1.0">
+        <title>Trilha Participações | Tarefas</title>
+        <link rel="icon" type="image/svg+xml" href="assets/images/favicon.svg">
+        <link rel="preconnect" href="https://cdn.jsdelivr.net" crossorigin>
+        <link rel="preconnect" href="https://fonts.googleapis.com">
+        <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+        <link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&display=swap">
+        <link rel="stylesheet" href="css/tokens.css">
+        <link rel="stylesheet" href="css/base.css">
+        <link rel="stylesheet" href="css/topbar.css">
+        <link rel="stylesheet" href="css/layout.css">
+        <link rel="stylesheet" href="css/kanban.css">
+        <link rel="stylesheet" href="css/components.css">
+        <link rel="stylesheet" href="css/modal-tarefa.css">
+
+        <script defer src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
+        <script defer src="js/core/supabase.js"></script>
+        <script defer src="js/core/state.js"></script>
+        <script defer src="js/core/utils.js"></script>
+        <script defer src="js/core/avatar.js"></script>
+        <script defer src="js/core/dados.js"></script>
+        <script defer src="js/core/usuario.js"></script>
+        <script defer src="js/modules/kanban.js"></script>
+        <script defer src="js/modules/kanban-dnd.js"></script>
+        <script defer src="js/modules/tarefa-modal.js"></script>
+        <script defer src="js/modules/tarefa-interacoes.js"></script>
+        <script defer src="js/modules/tarefa-tags.js"></script>
+        <script defer src="js/core/layout.js"></script>
+        <script defer src="js/core/busca.js"></script>
+        <script defer src="js/core/main.js"></script>
+    </head>
+
+    <body data-aba="kanban">
+        <!-- A topbar é montada por js/core/layout.js -->
+        <header class="topbar" id="topbar"></header>
+
+        <main class="content-container">
+            <section id="view-kanban" class="view-section active">
+                <div class="main-container">
+                    <!-- Quadro de tarefas (kanban) com colunas geradas dinamicamente via Supabase -->
+                    <div class="kanban-board" id="kanbanBoard"></div>
+                </div>
+            </section>
+        </main>
+        <!-- MODAL DE DETALHES DA TAREFA -->
+        <div class="modal-overlay" id="modalCardDetalhes" onclick="fecharModalDetalhes(event)">
+            <div class="modal-card-container" onclick="event.stopPropagation()">
+                <button type="button" class="modal-close-btn" onclick="fecharModalDetalhes()">&times;</button>
+                <div class="modal-header">
+                    <span id="modalCardColunaBadge" class="modal-coluna-badge">Status</span>
+                    <h2 id="modalCardTitulo" contenteditable="true" onblur="salvarTituloCardModal()">Título da Tarefa</h2>
+                </div>
+
+                <div class="modal-body-grid">
+                    <!-- Coluna Esquerda: Descrição, Checklist, Anexos e Comentários -->
+                    <div class="modal-main-content">
+                        <div class="meta-group">
+                            <div id="modalCardTagsContainer" class="modal-tags-container"></div>
+                        </div>
+
+                        <!-- Descrição -->
+                        <div class="modal-section">
+                            <h3>Descrição</h3>
+                            <textarea id="modalCardDescricao" rows="3" placeholder="Adicione uma descrição..." onblur="salvarDescricaoCardModal()"></textarea>
+                        </div>
+
+                        <!-- Subtarefas / Checklist -->
+                        <div class="modal-section">
+                            <div class="section-header-flex">
+                                <h3>Checklist</h3>
+                                <span id="modalChecklistProgressoTexto" class="progress-text">0%</span>
+                            </div>
+                            <div class="progress-bar-container">
+                                <div id="modalChecklistProgressBar" class="progress-bar-fill" style="width: 0%;"></div>
+                            </div>
+                            <div id="modalSubtarefasLista" class="subtarefas-lista"></div>
+                            
+                            <div class="add-subtask-box">
+                                <input type="text" id="inputNovaSubtarefa" placeholder="+ Adicionar item de checklist..." onkeypress="handleKeySubtarefa(event)">
+                                <button type="button" class="btn-primary btn-sm" onclick="adicionarSubtarefaModal()">Adicionar</button>
+                            </div>
+                        </div>
+
+                        <!-- Anexos -->
+                        <div class="modal-section">
+                            <h3>Anexos e documentos</h3>
+                            <div id="modalAnexosLista" class="anexos-lista"></div>
+                            <div class="upload-anexo-box">
+                                <input type="file" id="inputUploadAnexo" style="display:none;" onchange="enviarAnexoCardModal(event)">
+                                <button type="button" class="btn-secondary btn-sm" onclick="document.getElementById('inputUploadAnexo').click()">Enviar arquivo</button>
+                            </div>
+                        </div>
+
+                        <!-- Comentários -->
+                        <div class="modal-section">
+                            <h3>Comentários</h3>
+                            <div id="modalComentariosLista" class="comentarios-lista"></div>
+                            <div class="novo-comentario-box">
+                                <textarea id="inputNovoComentario" rows="2" placeholder="Escreva um comentário..."></textarea>
+                                <button type="button" class="btn-primary btn-sm" onclick="enviarComentarioModal()">Comentar</button>
+                            </div>
+                        </div>
+                    </div>
+
+                    <!-- Coluna Direita: Metadados, Responsáveis e Prazos -->
+                    <div class="modal-sidebar-content">
+                        <div class="meta-group">
+                            <label>Prioridade</label>
+                            <select id="modalCardPrioridade" onchange="salvarPrioridadeCardModal()">
+                                <option value="Baixa">Baixa</option>
+                                <option value="Média">Média</option>
+                                <option value="Alta">Alta</option>
+                            </select>
+                        </div>
+
+                        <div class="meta-group">
+                            <label>Atribuído a</label>
+                            <div id="modalResponsaveisAvatares" class="responsaveis-avatares-flex"></div>
+                        </div>
+
+                        <div class="meta-group">
+                            <label>Prazo Final</label>
+                            <input type="date" id="modalCardPrazoFim" onchange="salvarDatasCardModal()">
+                        </div>
+
+                        <div class="meta-group danger-zone" style="margin-top: 2rem;">
+                            <button type="button" class="btn-danger-outline" onclick="arquivarTarefaModal()">Arquivar Tarefa</button>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+        <script>function iniciarPagina() { renderizarTarefas(); }</script>
+    </body>
+</html>

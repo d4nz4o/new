@@ -1,0 +1,220 @@
+/* Sidebar Panorama*/
+.sidebar {
+  min-width: 220px;
+  max-width: 300px;
+  background: var(--bg-surface);
+  border-radius: var(--radius-cards);
+  padding: 1rem;
+  border: 1px solid var(--border-light);
+  box-shadow: var(--shadow-sm);
+  display: flex;
+  flex-direction: column;
+}
+
+.sidebar h2 {
+  font-size: 0.85rem;
+  font-weight: 700;
+  color: var(--text-secondary);
+  text-transform: uppercase;
+  letter-spacing: 0.05em;
+  margin-bottom: 1rem;
+  padding-bottom: 0.75rem;
+  border-bottom: 1px solid var(--border-light);
+}
+
+.team-list {
+  display: flex;
+  flex-direction: column;
+  gap: 8px;
+  overflow-y: auto;
+}
+
+.team-list small.empty-msg {
+  color: var(--text-muted);
+}
+
+.member-card {
+  display: flex;
+  align-items: center;
+  gap: 12px;
+  padding: 10px;
+  border-radius: 8px;
+  transition: background 0.15s ease;
+}
+
+.member-card.clickable {
+  cursor: pointer;
+}
+
+.member-card:hover {
+  background-color: var(--bg-subtle);
+}
+
+
+.member-info {
+  display: flex;
+  flex-direction: column;
+}
+
+.member-info strong {
+  font-size: 0.88rem;
+  color: var(--text-primary);
+  font-weight: 600;
+}
+
+.member-info span {
+  font-size: 0.75rem;
+  color: var(--text-muted);
+}
+
+.badge {
+  font-size: 0.7rem;
+  color: var(--brand-blue);
+  font-weight: 500;
+  margin-top: 2px;
+}
+
+/* ==========================================
+   PAINEL DE DETALHES DO COLABORADOR (VIEW EQUIPE)
+   ========================================== */
+
+.details-panel {
+  flex: 1;
+  background: var(--bg-surface);
+  border-radius: var(--radius-cards);
+  border: 1px solid var(--border-light);
+  box-shadow: var(--shadow-sm);
+  padding: 2rem;
+  display: flex;
+  flex-direction: column;
+}
+
+.details-placeholder {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  height: 100%;
+  color: var(--text-muted);
+  text-align: center;
+}
+
+.placeholder-icon {
+  font-size: 3rem;
+  margin-bottom: 1rem;
+  opacity: 0.5;
+}
+
+.details-placeholder h3 {
+  font-size: 1.1rem;
+  color: var(--text-secondary);
+  margin-bottom: 0.5rem;
+}
+
+/* Card de perfil do colaborador */
+.colab-profile-card {
+  position: relative;
+  display: flex;
+  flex-direction: column;
+  gap: 2rem;
+  animation: fadeIn 0.2s ease-in-out;
+}
+
+.btn-close-details {
+  position: absolute;
+  top: 15px;
+  right: 15px;
+  background: transparent;
+  border: none;
+  font-size: 1.5rem;
+  cursor: pointer;
+  color: var(--text-muted);
+  line-height: 1;
+  padding: 2px 6px;
+  transition: color 0.15s ease;
+}
+
+.btn-close-details:hover {
+  color: var(--text-primary);
+}
+
+.profile-header {
+  display: flex;
+  align-items: center;
+  gap: 1.5rem;
+  padding-bottom: 1.5rem;
+  border-bottom: 1px solid var(--border-light);
+}
+
+.profile-avatar {
+  width: 64px !important;
+  height: 64px !important;
+  font-size: 1.5rem !important;
+}
+
+.profile-title h2 {
+  font-size: 1.5rem;
+  margin-bottom: 4px;
+  text-transform: uppercase;
+}
+
+.role-badge {
+  font-size: 0.85rem;
+  color: var(--text-secondary);
+  background: var(--bg-subtle);
+  padding: 3px 10px;
+  border-radius: 6px;
+  border: 1px solid var(--border-light);
+}
+
+.profile-details-grid {
+  display: grid;
+  grid-template-columns: repeat(auto-fit, minmax(200px, 1fr));
+  gap: 1rem;
+}
+
+.profile-details-grid-2 {
+  display: grid;
+  grid-template-columns: repeat(auto-fit, minmax(220px, 1fr));
+  gap: 1rem;
+}
+
+.detail-item {
+  display: flex;
+  flex-direction: column;
+  gap: 4px;
+  background: var(--bg-app);
+  padding: 1rem;
+  border-radius: 8px;
+  border: 1px solid var(--border-light);
+}
+
+.detail-item label {
+  font-size: 0.75rem;
+  font-weight: 600;
+  text-transform: uppercase;
+  color: var(--text-muted);
+  letter-spacing: 0.05em;
+}
+
+.detail-item p {
+  font-size: 0.95rem;
+  color: var(--text-primary);
+  font-weight: 500;
+}
+
+.level-badge {
+  display: inline-block;
+  color: #fff;
+  padding: 2px 8px;
+  border-radius: 4px;
+  font-size: 0.8rem;
+  font-weight: 600;
+  text-transform: uppercase;
+}
+
+/* Card ativo na sidebar de equipe */
+.member-card.active-member {
+  background-color: var(--bg-subtle);
+  border-left: 3px solid var(--brand-blue);
+}

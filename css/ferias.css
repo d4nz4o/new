@@ -1,0 +1,153 @@
+/* Layout do Mapa de Férias */
+.ferias-header-controls {
+  display: flex;
+  background: var(--bg-surface);
+  padding: 0 2px 0 0;
+  justify-content: space-between;
+  align-items: center;
+  margin-bottom: 4px;
+  z-index: 101;
+  text-transform: uppercase;
+}
+
+.ano-selector {
+  display: flex;
+  align-items: center;
+  gap: 12px;
+  background: #f1f5f9;
+  padding: 6px 12px;
+  border-radius: 8px;
+  user-select: none;
+}
+
+.ano-selector span {
+  font-weight: 700;
+  font-size: 1.1rem;
+  color: #1e293b;
+  min-width: 50px;
+  text-align: center;
+}
+
+.btn-ano {
+  background: #ffffff;
+  border: 1px solid #cbd5e1;
+  color: #334155;
+  font-size: 1.1rem;
+  font-weight: bold;
+  width: 32px;
+  height: 32px;
+  border-radius: 6px;
+  cursor: pointer !important;
+  pointer-events: auto !important;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  transition: all 0.2s ease;
+  z-index: 102;
+}
+
+.btn-ano:hover {
+  background-color: #e2e8f0;
+  border-color: #94a3b8;
+  color: #0f172a;
+}
+
+.btn-ano:active {
+  transform: scale(0.95);
+}
+
+.legenda-ferias {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 10px;
+  margin-bottom: 10px;
+}
+
+.legenda-item {
+  display: flex;
+  align-items: center;
+  gap: 6px;
+  font-size: 0.85rem;
+  background: #fff;
+  padding: 4px 8px;
+  border-radius: 6px;
+  border: 1px solid #e2e8f0;
+}
+
+.legenda-cor {
+  width: 12px;
+  height: 12px;
+  border-radius: 50%;
+}
+
+/* Grid */
+.mapa-ferias-grid {
+  display: grid;
+  grid-template-columns: repeat(6, 1fr);
+  gap: 12px;
+}
+
+@media (max-width: 1024px) {
+  .mapa-ferias-grid {
+    grid-template-columns: repeat(2, 1fr);
+  }
+}
+
+@media (max-width: 600px) {
+  .mapa-ferias-grid {
+    grid-template-columns: 1fr;
+  }
+}
+
+.mes-card {
+  background: #ffffff;
+  border: 1px solid #e2e8f0;
+  border-radius: 4px;
+  padding: 12px;
+  box-shadow: 0 1px 3px rgba(0,0,0,0.05);
+}
+
+.mes-card h4 {
+  text-align: center;
+  margin-top: 0;
+  margin-bottom: 8px;
+  text-transform: capitalize;
+  color: #334155;
+}
+
+.dias-semana-grid {
+  display: grid;
+  grid-template-columns: repeat(7, 1fr);
+  text-align: center;
+  font-size: 0.75rem;
+  font-weight: bold;
+  color: #94a3b8;
+  margin-bottom: 4px;
+}
+
+.dias-grid {
+  display: grid;
+  grid-template-columns: repeat(7, 1fr);
+  gap: 2px;
+}
+
+.dia-cell {
+  aspect-ratio: 1;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  font-size: 0.75rem;
+  border-radius: 4px;
+  color: #334155;
+  background: #f8fafc;
+  position: relative;
+}
+
+.dia-cell.vazio {
+  background: transparent;
+}
+
+.dia-cell.com-ferias {
+  color: #ffffff;
+  font-weight: bold;
+}

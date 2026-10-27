@@ -1,0 +1,55 @@
+<!DOCTYPE html>
+<html lang="pt-BR">
+    <head>
+        <meta charset="UTF-8">
+        <meta name="viewport" content="width=device-width, initial-scale=1.0">
+        <title>Trilha Participações | Férias</title>
+        <link rel="icon" type="image/svg+xml" href="assets/images/favicon.svg">
+        <link rel="preconnect" href="https://cdn.jsdelivr.net" crossorigin>
+        <link rel="preconnect" href="https://fonts.googleapis.com">
+        <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+        <link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&display=swap">
+        <link rel="stylesheet" href="css/tokens.css">
+        <link rel="stylesheet" href="css/base.css">
+        <link rel="stylesheet" href="css/topbar.css">
+        <link rel="stylesheet" href="css/layout.css">
+        <link rel="stylesheet" href="css/components.css">
+        <link rel="stylesheet" href="css/ferias.css">
+
+        <script defer src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
+        <script defer src="js/core/supabase.js"></script>
+        <script defer src="js/core/state.js"></script>
+        <script defer src="js/core/utils.js"></script>
+        <script defer src="js/core/avatar.js"></script>
+        <script defer src="js/core/dados.js"></script>
+        <script defer src="js/core/usuario.js"></script>
+        <script defer src="js/modules/ferias.js"></script>
+        <script defer src="js/core/layout.js"></script>
+        <script defer src="js/core/busca.js"></script>
+        <script defer src="js/core/main.js"></script>
+    </head>
+
+    <body data-aba="ferias">
+        <!-- A topbar é montada por js/core/layout.js -->
+        <header class="topbar" id="topbar"></header>
+
+        <main class="content-container">
+            <section id="view-ferias" class="view-section active">
+                <div class="view-container">
+                    <div class="ferias-header-controls">
+                        <h2>Cronograma de Férias e Day Off</h2>
+                        <div class="ano-selector">
+                            <button type="button" class="btn-ano" id="btn-ano-anterior" onclick="mudarAnoFerias(-1)">&lt;</button>
+                            <span id="anoFeriasAtual">2026</span>
+                            <button type="button" class="btn-ano" id="btn-ano-proximo" onclick="mudarAnoFerias(1)">&gt;</button>
+                        </div>
+                    </div>
+                    <div id="legendaFerias" class="legenda-ferias"></div>
+                    <div id="mapaFeriasGrid" class="mapa-ferias-grid"></div>
+                </div>
+            </section>
+        </main>
+
+        <script>function iniciarPagina() { carregarFerias(); }</script>
+    </body>
+</html>
