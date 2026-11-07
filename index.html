@@ -5,7 +5,7 @@
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
   <title>Trilha Participações | Controladoria - Login</title>
   <meta name="theme-color" content="#08172b">
-  <link rel="icon" type="image/svg+xml" href="assets/images/favicon-trilha.png">
+  <link rel="icon" type="image/svg+xml" href="assets/images/favicon.svg">
 
   <link rel="preconnect" href="https://fonts.googleapis.com">
   <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
@@ -366,7 +366,7 @@
         <g class="estacao" style="--i:2">
           <circle class="onda" cx="430" cy="250" r="9"/>
           <circle class="anel" cx="430" cy="250" r="9"/>
-          <text x="430" y="284" text-anchor="middle">Controles</text>
+          <text x="430" y="284" text-anchor="middle">Controle</text>
         </g>
         <g class="estacao" style="--i:3">
           <circle class="onda" cx="560" cy="80" r="9"/>
@@ -408,7 +408,7 @@
           onclick="window.location.href='index.html'"
         />
         <h1 class="login-titulo entra" style="--i:3">Embarque no sistema</h1>
-        <p class="login-subtitle entra" style="--i:4">Acesse utilizando sua conta corporativa.</p>
+        <p class="login-subtitle entra" style="--i:4">Acesse o sistema com a sua conta corporativa.</p>
       </div>
 
       <div class="login-corpo entra" style="--i:5">
@@ -428,15 +428,15 @@
           <span class="progresso" aria-hidden="true"></span>
         </button>
 
-        <!-- Microsoft: ainda sem direcionamento (sem onclick) -->
-        <button type="button" id="btnMicrosoft" class="btn-google btn-microsoft" aria-disabled="true" title="Em breve">
+        <!-- Microsoft -->
+        <button type="button" id="btnMicrosoft" class="btn-google btn-microsoft" onclick="fazerLoginComMicrosoft()">
           <svg width="20" height="20" viewBox="0 0 24 24" aria-hidden="true">
             <rect x="1" y="1" width="10.5" height="10.5" fill="#F25022"/>
             <rect x="12.5" y="1" width="10.5" height="10.5" fill="#7FBA00"/>
             <rect x="1" y="12.5" width="10.5" height="10.5" fill="#00A4EF"/>
             <rect x="12.5" y="12.5" width="10.5" height="10.5" fill="#FFB900"/>
           </svg>
-          <span>Entrar com a Microsoft</span>
+          <span id="btnTextoMs">Entrar com a Microsoft</span>
           <svg class="seta" viewBox="0 0 24 24" aria-hidden="true"><path d="M5 12h14M13 6l6 6-6 6"/></svg>
           <span class="progresso" aria-hidden="true"></span>
         </button>
@@ -444,7 +444,7 @@
       </div>
 
       <div class="login-footer entra" style="--i:6">
-        Sistema criado pela Controladoria da Trilha.
+        Sistema interno criado pela Controladoria da Trilha.
       </div>
     </div>
   </main>
@@ -459,43 +459,56 @@
 <script>
   const DOMINIO_CORPORATIVO = "triviatrens.com.br";
 
-  function definirCarregando(ativo) {
-    const btn = document.getElementById('btnGoogle');
-    const txt = document.getElementById('btnTexto');
-    if (!btn || !txt) return;
-    btn.classList.toggle('carregando', ativo);
-    btn.disabled = ativo;
-    txt.textContent = ativo ? 'Embarcando…' : 'Entrar com o Google';
-    const btnMs = document.getElementById('btnMicrosoft');
-    if (btnMs) btnMs.disabled = ativo;
+  const BOTOES = {
+    google:    { btn: 'btnGoogle',    txt: 'btnTexto',   padrao: 'Entrar com o Google' },
+    microsoft: { btn: 'btnMicrosoft', txt: 'btnTextoMs', padrao: 'Entrar com a Microsoft' }
+  };
+
+  // Marca o botão do provedor escolhido como "Embarcando…" e trava os dois enquanto o login inicia
+  function definirCarregando(ativo, provedor) {
+    Object.entries(BOTOES).forEach(([nome, cfg]) => {
+      const btn = document.getElementById(cfg.btn);
+      const txt = document.getElementById(cfg.txt);
+      if (!btn || !txt) return;
+      const escolhido = ativo && nome === provedor;
+      btn.classList.toggle('carregando', escolhido);
+      btn.disabled = ativo;
+      txt.textContent = escolhido ? 'Embarcando…' : cfg.padrao;
+    });
     document.body.classList.toggle('partindo', ativo);
   }
 
-  async function fazerLoginComGoogle() {
+  async function iniciarLogin(provedor, provider, opcoesExtras) {
     if (!sbClient) {
       exibirErro("Erro ao conectar ao serviço de autenticação.");
       return;
     }
 
-    definirCarregando(true);
+    definirCarregando(true, provedor);
 
     // Redireciona o utilizador logado diretamente para hub.html (funciona também na raiz do domínio)
     const urlRedirecionamento = new URL('hub.html', window.location.href).href;
 
     const { data, error } = await sbClient.auth.signInWithOAuth({
-      provider: 'google',
-      options: {
-        redirectTo: urlRedirecionamento,
-        // Dica ao Google para listar só contas do domínio corporativo (a validação real continua no servidor)
-        queryParams: { hd: DOMINIO_CORPORATIVO }
-      }
+      provider: provider,
+      options: Object.assign({ redirectTo: urlRedirecionamento }, opcoesExtras)
     });
 
     if (error) {
       console.error("Erro na autenticação:", error.message);
       definirCarregando(false);
-      exibirErro("Falha ao iniciar o login com o Google. Tente novamente.");
+      exibirErro("Falha ao iniciar o login. Tente novamente.");
     }
+  }
+
+  function fazerLoginComGoogle() {
+    // "hd": dica ao Google para listar só contas do domínio corporativo (a validação real continua no servidor)
+    return iniciarLogin('google', 'google', { queryParams: { hd: DOMINIO_CORPORATIVO } });
+  }
+
+  function fazerLoginComMicrosoft() {
+    // O Supabase exige que a Microsoft devolva o e-mail, por isso o escopo "email"
+    return iniciarLogin('microsoft', 'azure', { scopes: 'email' });
   }
 
   function exibirErro(mensagem) {
