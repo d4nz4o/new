@@ -4,7 +4,7 @@
 // computador dormir) usam o mesmo relógio: usar uma aba mantém as outras conectadas.
 
 (() => {
-  const INATIVIDADE_MS = 1 * 1 * 30 * 1000;   // tempo sem uso até desconectar (2 horas)
+  const INATIVIDADE_MS = 2 * 60 * 60 * 1000;   // tempo sem uso até desconectar (2 horas)
   const AVISO_MS = 60 * 1000;                  // aviso antes de desconectar (60 segundos)
   const CHAVE = 'trilha_atividade';
   const GRAVA_A_CADA_MS = 5000;                // evita gravar a cada movimento do mouse
