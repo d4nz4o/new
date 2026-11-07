@@ -4,147 +4,471 @@
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
   <title>Trilha Participações | Controladoria - Login</title>
-  <link rel="icon" type="image/svg+xml" href="assets/images/favicon.png">
-  
-  <!-- Supabase JS Client -->
+  <meta name="theme-color" content="#08172b">
+  <link rel="icon" type="image/svg+xml" href="assets/images/favicon.svg">
+
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=IBM+Plex+Sans:wght@400;500;600;700&display=swap">
+
+  <!-- Supabase: biblioteca + conexão única do projeto (js/core/supabase.js define sbClient) -->
   <script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
+  <script src="js/core/supabase.js"></script>
 
   <style>
+    :root {
+      --bg-1: #08172b;
+      --bg-2: #0f2c52;
+      --bg-3: #15385e;
+      --rail: #2573c0;
+      --logo-blue: #3a93dd;
+      --sky: #8cc6f2;
+      --ink: #15385e;
+      --ink-2: #46607c;
+      --line: #dce5ef;
+      --ok: #3ddc97;
+      --ease: cubic-bezier(.16, .8, .24, 1);
+    }
+
+    * { box-sizing: border-box; }
+
     body.login-page {
       margin: 0;
-      padding: 0;
       min-height: 100vh;
-      display: flex;
+      min-height: 100svh;
+      position: relative;
+      overflow-x: hidden;
+      display: grid;
+      grid-template-columns: minmax(0, 1.15fr) minmax(0, .85fr);
       align-items: center;
-      justify-content: center;
-      background: linear-gradient(135deg, #0f172a 0%, #1e3a8a 50%, #0f172a 100%);
-      font-family: system-ui, -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, Oxygen, Ubuntu, Cantarell, sans-serif;
+      gap: clamp(16px, 4vw, 64px);
+      padding: 0 clamp(20px, 6vw, 96px) 70px;
+      color: #fff;
+      background: linear-gradient(160deg, var(--bg-1) 0%, var(--bg-2) 55%, var(--bg-3) 100%);
+      font-family: 'IBM Plex Sans', system-ui, -apple-system, 'Segoe UI', sans-serif;
+      -webkit-font-smoothing: antialiased;
+      transition: opacity .35s ease, transform .35s ease;
     }
+
+    :focus-visible { outline: 2px solid var(--logo-blue); outline-offset: 3px; }
+
+    /* ---------- Fundo ---------- */
+    .fundo { position: absolute; inset: 0; z-index: 0; pointer-events: none; }
+
+    /* grade técnica, como planta de projeto */
+    .grade {
+      position: absolute; inset: 0;
+      background-image:
+        linear-gradient(rgba(140, 198, 242, .06) 1px, transparent 1px),
+        linear-gradient(90deg, rgba(140, 198, 242, .06) 1px, transparent 1px);
+      background-size: 48px 48px;
+      -webkit-mask-image: radial-gradient(ellipse at 40% 45%, #000 20%, transparent 75%);
+      mask-image: radial-gradient(ellipse at 40% 45%, #000 20%, transparent 75%);
+    }
+
+    .halo {
+      position: absolute; width: 640px; height: 640px; border-radius: 50%;
+      top: -18%; left: -8%;
+      background: radial-gradient(circle, rgba(58, 147, 221, .35) 0%, rgba(58, 147, 221, 0) 65%);
+      animation: respira 8s ease-in-out infinite alternate;
+    }
+    .halo.h2 { top: auto; left: auto; right: -10%; bottom: -25%; width: 560px; height: 560px; animation-delay: -3s; }
+
+    /* luzes de sinalização ao longe */
+    .sinal {
+      position: absolute; width: 5px; height: 5px; border-radius: 50%;
+      left: var(--x); top: var(--y);
+      background: var(--cor, var(--sky));
+      box-shadow: 0 0 10px 2px var(--cor, var(--sky));
+      animation: pisca var(--d, 4s) ease-in-out var(--a, 0s) infinite;
+    }
+
+    /* ---------- Via permanente (base da página) ---------- */
+    .via {
+      position: absolute; left: 0; right: 0; bottom: 0; height: 58px; z-index: 1;
+      pointer-events: none; overflow: hidden;
+      background: linear-gradient(180deg, rgba(8, 23, 43, 0) 0%, rgba(8, 23, 43, .85) 55%);
+    }
+    .trilho {
+      position: absolute; left: 0; right: 0; height: 3px; background: #9bb8d6; opacity: .75;
+    }
+    .trilho.t1 { bottom: 34px; }
+    .trilho.t2 { bottom: 14px; }
+    .dormentes {
+      position: absolute; left: 0; width: calc(100% + 36px); bottom: 8px; height: 32px;
+      background: repeating-linear-gradient(90deg, #2d5380 0 8px, transparent 8px 36px);
+      will-change: transform;
+      opacity: .7;
+      animation: dormentes 1.1s linear infinite;
+      transition: animation-duration .3s;
+    }
+    body.partindo .dormentes { animation-duration: .22s; }
+
+    /* ---------- Lado esquerdo (apresentação) ---------- */
+    .apresentacao { position: relative; z-index: 2; min-width: 0; max-width: 640px; }
+
+    .selo {
+      display: inline-flex; align-items: center; gap: 9px;
+      margin: 0 0 18px; padding: 6px 14px 6px 12px;
+      border: 1px solid rgba(140, 198, 242, .28);
+      border-radius: 999px;
+      background: rgba(255, 255, 255, .06);
+      color: var(--sky);
+      font-size: .74rem; font-weight: 600; letter-spacing: .09em; text-transform: uppercase;
+    }
+    .selo-ponto {
+      width: 8px; height: 8px; border-radius: 50%; background: var(--ok);
+      box-shadow: 0 0 0 0 rgba(61, 220, 151, .6);
+      animation: pulso 2.2s ease-out infinite;
+    }
+
+    .titulo {
+      margin: 0; max-width: 16ch;
+      font-size: clamp(2.2rem, 4.8vw, 3.8rem);
+      font-weight: 700; line-height: 1.04; letter-spacing: -.03em;
+    }
+    .destaque {
+      display: block;
+      background: linear-gradient(90deg, #6bb6ee 0%, #bfe3fb 50%, #6bb6ee 100%);
+      background-size: 200% 100%;
+      -webkit-background-clip: text; background-clip: text;
+      -webkit-text-fill-color: transparent; color: var(--sky);
+      animation: brilho 6s linear infinite;
+    }
+
+    .lead { max-width: 480px; margin: 16px 0 0; color: rgba(222, 236, 249, .78); font-size: 1.04rem; line-height: 1.55; }
+
+    /* ---------- Mapa de linha (diagrama metroferroviário) ---------- */
+    .mapa {
+      margin-top: clamp(14px, 3vh, 34px);
+      width: 100%; max-width: min(600px, 68vh);
+      translate: calc(var(--mx, 0) * -10px) calc(var(--my, 0) * -6px);
+    }
+    .mapa svg { display: block; width: 100%; height: auto; overflow: visible; }
+
+    .linha-base  { fill: none; stroke: rgba(140, 198, 242, .18); stroke-width: 10; stroke-linecap: round; }
+    .linha-ativa {
+      fill: none; stroke: url(#g-linha); stroke-width: 6; stroke-linecap: round;
+      stroke-dasharray: 1; stroke-dashoffset: 1;
+      animation: desenha 2.2s var(--ease) .5s forwards;
+    }
+    .estacao circle.anel {
+      fill: var(--bg-2); stroke: #fff; stroke-width: 3.5;
+      transform-box: fill-box; transform-origin: center;
+      animation: pop .6s var(--ease) backwards;
+      animation-delay: calc(.5s + var(--i) * .55s);
+    }
+    .estacao circle.onda {
+      fill: none; stroke: var(--logo-blue); stroke-width: 2;
+      transform-box: fill-box; transform-origin: center;
+      animation: onda 3s ease-out infinite;
+      animation-delay: calc(1.2s + var(--i) * .55s);
+    }
+    .estacao text {
+      fill: #e6f1fb; font-size: 15px; font-weight: 600; letter-spacing: .02em;
+      font-family: 'IBM Plex Sans', system-ui, sans-serif;
+      animation: surge .6s var(--ease) backwards;
+      animation-delay: calc(.7s + var(--i) * .55s);
+    }
+    .estacao text.sub { fill: rgba(190, 218, 243, .65); font-size: 11px; font-weight: 500; }
+
+    /* ---------- Cartão de acesso (bilhete) ---------- */
+    .cartao-wrap {
+      position: relative; z-index: 2;
+      justify-self: center; width: 100%; max-width: 410px;
+      filter: drop-shadow(0 30px 40px rgba(2, 10, 24, .5));
+      animation: sobe .9s var(--ease) .15s backwards;
+      transition: opacity .3s ease, transform .45s ease;
+    }
+    body.partindo .cartao-wrap { opacity: 0; transform: translateY(-14px) scale(.98); transition: opacity .3s ease .7s, transform .45s ease .7s; }
 
     .login-card {
-      background: rgba(255, 255, 255, 0.98);
-      border-radius: 16px;
-      padding: 2.5rem 2rem;
-      width: 100%;
-      max-width: 400px;
-      box-shadow: 0 20px 25px -5px rgba(0, 0, 0, 0.3), 0 8px 10px -6px rgba(0, 0, 0, 0.3);
+      position: relative;
+      background: rgba(255, 255, 255, .985);
+      border-radius: 18px;
+      color: var(--ink);
       text-align: center;
-      backdrop-filter: blur(8px);
+      /* entalhes laterais do bilhete, alinhados com a linha tracejada do rodapé */
+      -webkit-mask:
+        radial-gradient(circle 11px at 0 calc(100% - 70px), #0000 97%, #000) left / 51% 100% no-repeat,
+        radial-gradient(circle 11px at 100% calc(100% - 70px), #0000 97%, #000) right / 51% 100% no-repeat;
+      mask:
+        radial-gradient(circle 11px at 0 calc(100% - 70px), #0000 97%, #000) left / 51% 100% no-repeat,
+        radial-gradient(circle 11px at 100% calc(100% - 70px), #0000 97%, #000) right / 51% 100% no-repeat;
+    }
+    /* faixa azul no topo, como a linha de um mapa */
+    .login-card::before {
+      content: ""; position: absolute; top: 0; left: 0; right: 0; height: 6px;
+      border-radius: 18px 18px 0 0;
+      background: linear-gradient(90deg, var(--rail), var(--logo-blue), var(--rail));
+      background-size: 200% 100%;
+      animation: brilho 5s linear infinite;
     }
 
-    .login-header {
-      margin-bottom: 2rem;
-    }
+    .login-header { padding: 2.4rem 2rem 1.4rem; }
 
     .login-logo {
-      max-width: 180px;
-      height: auto;
-      margin-bottom: 1rem;
-      cursor: pointer;
-      transition: opacity 0.2s ease, transform 0.2s ease;
+      max-width: 170px; height: auto; margin-bottom: 1.1rem; cursor: pointer;
+      transition: opacity .2s ease, transform .25s var(--ease);
     }
+    .login-logo:hover { opacity: .85; transform: scale(1.03); }
 
-    .login-logo:hover {
-      opacity: 0.85;
-      transform: scale(1.02);
-    }
+    .login-titulo { margin: 0 0 6px; font-size: 1.25rem; font-weight: 700; letter-spacing: -.02em; }
+    .login-subtitle { color: #64748b; font-size: .93rem; margin: 0; line-height: 1.45; }
 
-    .login-subtitle {
-      color: #64748b;
-      font-size: 0.95rem;
-      margin: 0;
-    }
+    .login-corpo { padding: 0 2rem 1.6rem; }
 
     .btn-google {
+      position: relative; overflow: hidden;
       width: 100%;
-      display: flex;
-      align-items: center;
-      justify-content: center;
-      gap: 12px;
-      background-color: #ffffff;
-      color: #1e293b;
-      border: 1px solid #cbd5e1;
-      border-radius: 8px;
-      padding: 12px 16px;
-      font-size: 1rem;
-      font-weight: 600;
+      display: flex; align-items: center; justify-content: center; gap: 12px;
+      background: #fff; color: #1e293b;
+      border: 1px solid #cbd5e1; border-radius: 10px;
+      padding: 13px 16px;
+      font: inherit; font-size: 1rem; font-weight: 600;
       cursor: pointer;
-      transition: all 0.2s ease;
-      box-shadow: 0 1px 2px 0 rgba(0, 0, 0, 0.05);
+      box-shadow: 0 1px 2px rgba(0, 0, 0, .05);
+      transition: transform .22s var(--ease), box-shadow .22s ease, border-color .22s ease, background-color .22s ease;
     }
+    /* brilho que varre o botão */
+    .btn-google::before {
+      content: ""; position: absolute; top: 0; bottom: 0; left: -60%; width: 40%;
+      background: linear-gradient(100deg, transparent, rgba(58, 147, 221, .18), transparent);
+      transform: skewX(-18deg);
+      transition: left .6s var(--ease);
+    }
+    .btn-google:hover { background: #f8fbff; border-color: var(--logo-blue); transform: translateY(-2px); box-shadow: 0 10px 20px -10px rgba(37, 115, 192, .5); }
+    .btn-google:hover::before { left: 120%; }
+    .btn-google:active { transform: translateY(0); }
+    .btn-google svg { flex: none; }
 
-    .btn-google:hover {
-      background-color: #f8fafc;
-      border-color: #94a3b8;
-      transform: translateY(-1px);
-      box-shadow: 0 4px 6px -1px rgba(0, 0, 0, 0.1);
-    }
+    .btn-google .seta { margin-left: auto; width: 18px; height: 18px; stroke: #7a8fa6; fill: none; stroke-width: 2; stroke-linecap: round; stroke-linejoin: round; transition: transform .22s var(--ease), stroke .22s ease; }
+    .btn-google:hover .seta { transform: translateX(4px); stroke: var(--rail); }
 
-    .btn-google:active {
-      transform: translateY(0);
+    /* carregando: um trem percorre a base do botão */
+    .btn-google .progresso { position: absolute; left: 0; right: 0; bottom: 0; height: 3px; opacity: 0; transition: opacity .2s; }
+    .btn-google .progresso::after {
+      content: ""; position: absolute; top: 0; bottom: 0; width: 38%;
+      background: linear-gradient(90deg, transparent, var(--logo-blue), var(--rail));
+      border-radius: 3px;
+      animation: trem-btn 1s var(--ease) infinite;
     }
+    .btn-google.carregando { pointer-events: none; opacity: .92; }
+    .btn-google.carregando .progresso { opacity: 1; }
+    .btn-google.carregando .seta { display: none; }
 
-    .login-footer {
-      margin-top: 2.5rem;
-      padding-top: 1.25rem;
-      border-top: 1px solid #e2e8f0;
-      color: #94a3b8;
-      font-size: 0.8rem;
-    }
+    .botoes { display: grid; gap: 12px; }
 
     .error-message {
       display: none;
-      background-color: #fef2f2;
-      border: 1px solid #fecaca;
-      color: #dc2626;
-      padding: 10px;
-      border-radius: 6px;
-      font-size: 0.85rem;
-      margin-bottom: 1.25rem;
-      text-align: center;
+      background: #fef2f2; border: 1px solid #fecaca; color: #dc2626;
+      padding: 10px 12px; border-radius: 8px;
+      font-size: .85rem; margin-bottom: 1rem; text-align: left;
+    }
+    .error-message.visivel { display: block; animation: treme .4s ease; }
+
+    .login-footer {
+      height: 70px;
+      display: grid; place-items: center;
+      padding: 0 2rem;
+      border-top: 2px dashed #d3deea;
+      color: #5f7389; font-size: .8rem;
+    }
+
+    /* ---------- Entradas ---------- */
+    .entra { animation: entra .8s var(--ease) backwards; animation-delay: calc(var(--i, 0) * 90ms + 120ms); }
+
+    @keyframes entra   { from { opacity: 0; transform: translateY(16px); } }
+    @keyframes sobe    { from { opacity: 0; transform: translateY(34px) scale(.97); } }
+    @keyframes respira { from { scale: 1; opacity: .75; } to { scale: 1.08; opacity: 1; } }
+    @keyframes pisca   { 0%, 100% { opacity: .25; } 50% { opacity: 1; } }
+    @keyframes pulso   { 0% { box-shadow: 0 0 0 0 rgba(61, 220, 151, .6); } 70%, 100% { box-shadow: 0 0 0 9px rgba(61, 220, 151, 0); } }
+    @keyframes brilho  { to { background-position: -200% 0; } }
+    @keyframes dormentes { to { transform: translateX(-36px); } }
+    @keyframes desenha { to { stroke-dashoffset: 0; } }
+    @keyframes pop     { from { transform: scale(0); opacity: 0; } }
+    @keyframes surge   { from { opacity: 0; transform: translateY(6px); } }
+    @keyframes onda    { 0% { transform: scale(1); opacity: .9; } 100% { transform: scale(3); opacity: 0; } }
+    @keyframes trem-btn { from { left: -40%; } to { left: 102%; } }
+    @keyframes treme   { 20% { transform: translateX(-5px); } 40% { transform: translateX(5px); } 60% { transform: translateX(-3px); } 80% { transform: translateX(3px); } }
+
+    /* ---------- Telas menores ---------- */
+    @media (max-width: 900px) {
+      body.login-page { grid-template-columns: 1fr; padding: 24px 18px 80px; align-content: center; }
+      .apresentacao { display: none; }
+      .cartao-wrap { max-width: 420px; }
+    }
+    /* Celulares e tablets: só os dormentes e a entrada do cartão se movem; o resto fica estático para poupar bateria e CPU */
+    @media (max-width: 900px) {
+      .halo, .sinal, .login-card::before { animation: none; }
+      .sinal { opacity: .7; }
+    }
+    @media (max-height: 700px) and (min-width: 901px) {
+      .lead { display: none; }
+    }
+
+    /* ---------- Movimento reduzido ---------- */
+    @media (prefers-reduced-motion: reduce) {
+      *, *::before, *::after { animation: none !important; transition: none !important; }
+      .linha-ativa { stroke-dashoffset: 0; }
     }
   </style>
 </head>
 <body class="login-page">
 
-  <div class="login-card">
-    <div class="login-header">
-      <img 
-        src="assets/images/logo.png" 
-        alt="Trilha Participações" 
-        class="login-logo"
-        onclick="window.location.href='index.html'"
-      />
-      <p class="login-subtitle">Acesse o sistema com a sua conta corporativa.</p>
-    </div>
+  <!-- Fundo -->
+  <div class="fundo" aria-hidden="true">
+    <div class="grade"></div>
+    <div class="halo"></div>
+    <div class="halo h2"></div>
+    <span class="sinal" style="--x:8%;--y:18%;--d:3.2s"></span>
+    <span class="sinal" style="--x:26%;--y:8%;--d:4.6s;--a:-1s;--cor:#ffd479"></span>
+    <span class="sinal" style="--x:54%;--y:14%;--d:3.8s;--a:-2s"></span>
+    <span class="sinal" style="--x:71%;--y:30%;--d:5s;--a:-.5s;--cor:#3ddc97"></span>
+    <span class="sinal" style="--x:90%;--y:12%;--d:4.2s;--a:-3s"></span>
+    <span class="sinal" style="--x:14%;--y:62%;--d:4.8s;--a:-1.5s;--cor:#ffd479"></span>
+    <span class="sinal" style="--x:46%;--y:80%;--d:3.6s;--a:-2.5s"></span>
+  </div>
 
-    <!-- Mensagem de erro -->
-    <div id="mensagemErro" class="error-message"></div>
+  <!-- Lado esquerdo: apresentação + mapa de linha -->
+  <section class="apresentacao">
 
-    <button type="button" class="btn-google" onclick="fazerLoginComGoogle()">
-      <svg width="20" height="20" viewBox="0 0 24 24">
-        <path fill="#4285F4" d="M22.56 12.25c0-.78-.07-1.53-.2-2.25H12v4.26h5.92c-.26 1.37-1.04 2.53-2.21 3.31v2.77h3.57c2.08-1.92 3.28-4.74 3.28-8.09z"/>
-        <path fill="#34A853" d="M12 23c2.97 0 5.46-.98 7.28-2.66l-3.57-2.77c-.98.66-2.23 1.06-3.71 1.06-2.86 0-5.29-1.93-6.16-4.53H2.18v2.84C3.99 20.53 7.7 23 12 23z"/>
-        <path fill="#FBBC05" d="M5.84 14.09c-.22-.66-.35-1.36-.35-2.09s.13-1.43.35-2.09V7.06H2.18C1.43 8.55 1 10.22 1 12s.43 3.45 1.18 4.94l2.85-2.22.81-.63z"/>
-        <path fill="#EA4335" d="M12 5.38c1.62 0 3.06.56 4.21 1.64l3.15-3.15C17.45 2.09 14.97 1 12 1 7.7 1 3.99 3.47 2.18 7.06l3.66 2.84c.87-2.6 3.3-4.52 6.16-4.52z"/>
+    <h2 class="titulo entra" style="--i:1">
+      Controladoria <span class="destaque">Trilha</span>
+    </h2>
+
+    <p class="lead entra" style="--i:2">
+      Tudo em um só trilho.
+    </p>
+
+    <div class="mapa entra" style="--i:3" aria-hidden="true">
+      <svg viewBox="0 0 600 400" xmlns="http://www.w3.org/2000/svg">
+        <defs>
+          <linearGradient id="g-linha" x1="0" y1="0" x2="1" y2="0">
+            <stop offset="0" stop-color="#2573c0"/>
+            <stop offset="1" stop-color="#6bb6ee"/>
+          </linearGradient>
+        </defs>
+
+        <path id="rota" class="linha-base" d="M40 330 C140 330 150 250 230 250 S350 330 430 250 S520 130 560 80"/>
+        <path class="linha-ativa" pathLength="1" d="M40 330 C140 330 150 250 230 250 S350 330 430 250 S520 130 560 80"/>
+
+        <g class="estacao" style="--i:0">
+          <circle class="onda" cx="40" cy="330" r="9"/>
+          <circle class="anel" cx="40" cy="330" r="9"/>
+          <text x="24" y="364" text-anchor="start">Demonstrações<tspan x="24" dy="19">contábeis</tspan></text>
+        </g>
+        <g class="estacao" style="--i:1">
+          <circle class="onda" cx="230" cy="250" r="9"/>
+          <circle class="anel" cx="230" cy="250" r="9"/>
+          <text x="230" y="222" text-anchor="middle">Indicadores</text>
+        </g>
+        <g class="estacao" style="--i:2">
+          <circle class="onda" cx="430" cy="250" r="9"/>
+          <circle class="anel" cx="430" cy="250" r="9"/>
+          <text x="430" y="284" text-anchor="middle">Controles</text>
+        </g>
+        <g class="estacao" style="--i:3">
+          <circle class="onda" cx="560" cy="80" r="9"/>
+          <circle class="anel" cx="560" cy="80" r="9"/>
+          <text x="584" y="52" text-anchor="end">Conformidade</text>
+        </g>
+
+        <!-- Trem que percorre a linha -->
+        <g>
+          <animateMotion dur="12s" begin="2.4s" repeatCount="indefinite" rotate="auto" calcMode="linear">
+            <mpath href="#rota"/>
+          </animateMotion>
+          <g opacity="0">
+            <animate attributeName="opacity" values="0;1;1;0" keyTimes="0;.05;.95;1" dur="12s" begin="2.4s" repeatCount="indefinite"/>
+            <rect x="-30" y="-9" width="60" height="18" rx="8" fill="#ffffff"/>
+            <rect x="-30" y="-9" width="60" height="18" rx="8" fill="none" stroke="#2573c0" stroke-width="1.5"/>
+            <rect x="-24" y="-5" width="9" height="6" rx="1.5" fill="#2573c0"/>
+            <rect x="-12" y="-5" width="9" height="6" rx="1.5" fill="#2573c0"/>
+            <rect x="0" y="-5" width="9" height="6" rx="1.5" fill="#2573c0"/>
+            <rect x="12" y="-5" width="12" height="6" rx="2" fill="#bfe3fb"/>
+            <rect x="-30" y="3" width="60" height="2.5" fill="#2573c0"/>
+            <circle cx="31" cy="0" r="9" fill="#fff6c8" opacity=".35"/>
+            <circle cx="29" cy="0" r="2.2" fill="#fff6c8"/>
+          </g>
+        </g>
       </svg>
-      Entrar com o Google
-    </button>
-
-    <div class="login-footer">
-      Sistema interno criado pela Controladoria da Trilha.
     </div>
+  </section>
+
+  <!-- Lado direito: cartão de acesso -->
+  <main class="cartao-wrap">
+    <div class="login-card">
+      <div class="login-header">
+        <img
+          src="assets/images/logo.png"
+          alt="Trilha Participações"
+          class="login-logo entra"
+          style="--i:2"
+          onclick="window.location.href='index.html'"
+        />
+        <h1 class="login-titulo entra" style="--i:3">Embarque no sistema</h1>
+        <p class="login-subtitle entra" style="--i:4">Acesse utilizando sua conta corporativa.</p>
+      </div>
+
+      <div class="login-corpo entra" style="--i:5">
+        <!-- Mensagem de erro -->
+        <div id="mensagemErro" class="error-message" role="alert"></div>
+
+        <div class="botoes">
+        <button type="button" id="btnGoogle" class="btn-google" onclick="fazerLoginComGoogle()">
+          <svg width="20" height="20" viewBox="0 0 24 24" aria-hidden="true">
+            <path fill="#4285F4" d="M22.56 12.25c0-.78-.07-1.53-.2-2.25H12v4.26h5.92c-.26 1.37-1.04 2.53-2.21 3.31v2.77h3.57c2.08-1.92 3.28-4.74 3.28-8.09z"/>
+            <path fill="#34A853" d="M12 23c2.97 0 5.46-.98 7.28-2.66l-3.57-2.77c-.98.66-2.23 1.06-3.71 1.06-2.86 0-5.29-1.93-6.16-4.53H2.18v2.84C3.99 20.53 7.7 23 12 23z"/>
+            <path fill="#FBBC05" d="M5.84 14.09c-.22-.66-.35-1.36-.35-2.09s.13-1.43.35-2.09V7.06H2.18C1.43 8.55 1 10.22 1 12s.43 3.45 1.18 4.94l2.85-2.22.81-.63z"/>
+            <path fill="#EA4335" d="M12 5.38c1.62 0 3.06.56 4.21 1.64l3.15-3.15C17.45 2.09 14.97 1 12 1 7.7 1 3.99 3.47 2.18 7.06l3.66 2.84c.87-2.6 3.3-4.52 6.16-4.52z"/>
+          </svg>
+          <span id="btnTexto">Entrar com o Google</span>
+          <svg class="seta" viewBox="0 0 24 24" aria-hidden="true"><path d="M5 12h14M13 6l6 6-6 6"/></svg>
+          <span class="progresso" aria-hidden="true"></span>
+        </button>
+
+        <!-- Microsoft: ainda sem direcionamento (sem onclick) -->
+        <button type="button" id="btnMicrosoft" class="btn-google btn-microsoft" aria-disabled="true" title="Em breve">
+          <svg width="20" height="20" viewBox="0 0 24 24" aria-hidden="true">
+            <rect x="1" y="1" width="10.5" height="10.5" fill="#F25022"/>
+            <rect x="12.5" y="1" width="10.5" height="10.5" fill="#7FBA00"/>
+            <rect x="1" y="12.5" width="10.5" height="10.5" fill="#00A4EF"/>
+            <rect x="12.5" y="12.5" width="10.5" height="10.5" fill="#FFB900"/>
+          </svg>
+          <span>Entrar com a Microsoft</span>
+          <svg class="seta" viewBox="0 0 24 24" aria-hidden="true"><path d="M5 12h14M13 6l6 6-6 6"/></svg>
+          <span class="progresso" aria-hidden="true"></span>
+        </button>
+        </div>
+      </div>
+
+      <div class="login-footer entra" style="--i:6">
+        Sistema criado pela Controladoria da Trilha.
+      </div>
+    </div>
+  </main>
+
+  <!-- Via permanente -->
+  <div class="via" aria-hidden="true">
+    <div class="dormentes"></div>
+    <div class="trilho t1"></div>
+    <div class="trilho t2"></div>
   </div>
 
 <script>
-  const SUPABASE_URL = "https://luujxgjjkbppjbefllsg.supabase.co";
-  const SUPABASE_PUBLISHABLE_KEY = "sb_publishable_eziJVLtciOqcihK-lLCfnw_ZGK72sFh";
+  const DOMINIO_CORPORATIVO = "triviatrens.com.br";
 
-  let sbClient = null;
-  try {
-    sbClient = window.supabase.createClient(SUPABASE_URL, SUPABASE_PUBLISHABLE_KEY);
-  } catch (err) {
-    console.error("Erro ao inicializar o Supabase:", err);
+  function definirCarregando(ativo) {
+    const btn = document.getElementById('btnGoogle');
+    const txt = document.getElementById('btnTexto');
+    if (!btn || !txt) return;
+    btn.classList.toggle('carregando', ativo);
+    btn.disabled = ativo;
+    txt.textContent = ativo ? 'Embarcando…' : 'Entrar com o Google';
+    const btnMs = document.getElementById('btnMicrosoft');
+    if (btnMs) btnMs.disabled = ativo;
+    document.body.classList.toggle('partindo', ativo);
   }
 
   async function fazerLoginComGoogle() {
@@ -153,18 +477,23 @@
       return;
     }
 
-    // Redireciona o utilizador logado diretamente para hub.html
-    const urlRedirecionamento = window.location.origin + window.location.pathname.replace('index.html', 'hub.html');
+    definirCarregando(true);
+
+    // Redireciona o utilizador logado diretamente para hub.html (funciona também na raiz do domínio)
+    const urlRedirecionamento = new URL('hub.html', window.location.href).href;
 
     const { data, error } = await sbClient.auth.signInWithOAuth({
       provider: 'google',
       options: {
-        redirectTo: urlRedirecionamento
+        redirectTo: urlRedirecionamento,
+        // Dica ao Google para listar só contas do domínio corporativo (a validação real continua no servidor)
+        queryParams: { hd: DOMINIO_CORPORATIVO }
       }
     });
 
     if (error) {
       console.error("Erro na autenticação:", error.message);
+      definirCarregando(false);
       exibirErro("Falha ao iniciar o login com o Google. Tente novamente.");
     }
   }
@@ -173,23 +502,67 @@
     const elErro = document.getElementById('mensagemErro');
     if (elErro) {
       elErro.innerText = mensagem;
-      elErro.style.display = 'block';
+      elErro.classList.remove('visivel');
+      void elErro.offsetWidth; // reinicia a animação
+      elErro.classList.add('visivel');
     }
   }
+
+  /* Com "reduzir movimento", o trem (animação SVG, que o CSS não controla) fica parado e oculto */
+  if (window.matchMedia('(prefers-reduced-motion: reduce)').matches) {
+    const svgMapa = document.querySelector('.mapa svg');
+    if (svgMapa && svgMapa.pauseAnimations) svgMapa.pauseAnimations();
+  }
+
+  /* Parallax suave do mapa ao mover o mouse (só com mouse e sem "reduzir movimento") */
+  (() => {
+    const reduz = window.matchMedia('(prefers-reduced-motion: reduce)').matches;
+    if (reduz || !window.matchMedia('(hover: hover)').matches) return;
+    const raiz = document.documentElement;
+    let alvoX = 0, alvoY = 0, x = 0, y = 0, rodando = false;
+
+    const passo = () => {
+      x += (alvoX - x) * 0.08;
+      y += (alvoY - y) * 0.08;
+      raiz.style.setProperty('--mx', x.toFixed(3));
+      raiz.style.setProperty('--my', y.toFixed(3));
+      if (Math.abs(alvoX - x) > 0.001 || Math.abs(alvoY - y) > 0.001) {
+        requestAnimationFrame(passo);
+      } else {
+        rodando = false;
+      }
+    };
+
+    window.addEventListener('pointermove', (e) => {
+      alvoX = (e.clientX / window.innerWidth) * 2 - 1;
+      alvoY = (e.clientY / window.innerHeight) * 2 - 1;
+      if (!rodando) { rodando = true; requestAnimationFrame(passo); }
+    }, { passive: true });
+  })();
+
+  // Ao voltar pelo botão do navegador, a página não pode ficar travada no estado "embarcando"
+  window.addEventListener('pageshow', () => definirCarregando(false));
 
   document.addEventListener("DOMContentLoaded", async () => {
     const urlParams = new URLSearchParams(window.location.search);
     if (urlParams.get('erro') === 'dominio_invalido') {
       exibirErro("Acesso negado: utilize uma conta corporativa da Trilha.");
+    } else if (urlParams.get('erro') === 'inatividade') {
+      exibirErro("Sua sessão foi encerrada por inatividade. Entre novamente.");
     }
 
     if (sbClient) {
       const { data: { session } } = await sbClient.auth.getSession();
-      
-      if (session) {
-        const email = session.user.email || "";
 
-        if (!email.endsWith("@triviatrens.com.br")) {
+      if (!session) {
+        // Sem sessão: zera o relógio de inatividade para o próximo login começar do zero
+        try { localStorage.removeItem('trilha_atividade'); } catch {}
+      }
+
+      if (session) {
+        const email = (session.user.email || "").toLowerCase();
+
+        if (!email.endsWith("@" + DOMINIO_CORPORATIVO)) {
           await sbClient.auth.signOut();
           exibirErro("Acesso negado: utilize uma conta corporativa da Trilha.");
           return;

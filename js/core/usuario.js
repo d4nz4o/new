@@ -18,7 +18,8 @@ document.addEventListener('click', (event) => {
 
 async function fazerLogout() {
   if (sbClient) {
-    await sbClient.auth.signOut();
+    // scope "local": desconecta só este navegador, sem derrubar o usuário em outros aparelhos
+    await sbClient.auth.signOut({ scope: 'local' });
   }
   Cache.limparTudo();
   window.location.href = "index.html";
