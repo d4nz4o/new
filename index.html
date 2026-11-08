@@ -223,7 +223,7 @@
           onclick="window.location.href='index.html'"
         />
         <h1 class="login-titulo entra" style="--i:3">Embarque no sistema</h1>
-        <p class="login-subtitle entra" style="--i:4">Acesse o sistema com a sua conta corporativa.</p>
+        <p class="login-subtitle entra" style="--i:4">Acesse com a sua conta corporativa.</p>
       </div>
 
       <div class="login-corpo entra" style="--i:5">
@@ -259,7 +259,7 @@
       </div>
 
       <div class="login-footer entra" style="--i:6">
-        Sistema interno criado pela Controladoria da Trilha.
+        Sistema criado pela Controladoria da Trilha.
       </div>
         </div>
         <div class="porta porta-e" aria-hidden="true"><div class="vidro"></div><i class="borracha"></i></div>
@@ -343,7 +343,7 @@
   document.addEventListener("DOMContentLoaded", async () => {
     const urlParams = new URLSearchParams(window.location.search);
     if (urlParams.get('erro') === 'dominio_invalido') {
-      exibirErro("Acesso negado: utilize uma conta corporativa da Trilha.");
+      exibirErro("Acesso negado! Utilize uma conta corporativa da Trilha.");
     } else if (urlParams.get('erro') === 'inatividade') {
       exibirErro("Sua sessão foi encerrada por inatividade. Entre novamente.");
     }
@@ -452,7 +452,7 @@
     setInterval(() => { if (embarcando || document.hidden) return; n = (n + 1) % lemas.length; escreve(linhas[1], lemas[n]); }, 9000);
     document.addEventListener('embarque', (e) => {
       embarcando = !!e.detail;
-      if (embarcando) mostra('ATENÇÃO', 'PORTAS FECHANDO', 0); else mostra('PRÓXIMA PARADA', lemas[n], 0);
+      if (embarcando) mostra('ATENÇÃO', 'TREM PARTINDO...', 0); else mostra('PRÓXIMA PARADA', lemas[n], 0);
     });
     const rel = document.getElementById('relogio');
     const hora = () => { if (rel) rel.textContent = new Date().toLocaleTimeString('pt-BR', { hour: '2-digit', minute: '2-digit' }); };
